@@ -91,14 +91,12 @@ public class Classifier {
 
 
     public HashMap<String,Float> classify(Bitmap bitmap){
-
         convertBitmapToByteBuffer(bitmap);
         tflite.run(imgData, labelProbArray);
         applyFilter();
         HashMap<String,Float> lables = printTopKLabels();
         return lables;
     }
-
 
     private void applyFilter() {
         int num_labels = labelList.size();

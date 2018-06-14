@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.provider.MediaStore;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,10 +16,7 @@ import android.widget.TextView;
 import com.example.brianphiri.whatfloweristhis.utils.Classifier;
 
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.util.HashMap;
-import java.util.Map;
-import java.util.PriorityQueue;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
