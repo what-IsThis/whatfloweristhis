@@ -19,6 +19,7 @@ import java.nio.channels.FileChannel;
 import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.PriorityQueue;
@@ -26,7 +27,6 @@ import java.util.PriorityQueue;
 import static android.support.constraint.Constraints.TAG;
 
 public class Classifier {
-
     private static final String MODEL_PATH = "optimized_graph.lite";
     private static final String LABEL_PATH = "retrained_labels.txt";
     private static final int RESULTS_TO_SHOW = 3;
@@ -90,15 +90,13 @@ public class Classifier {
     }
 
 
-    public String classify(Bitmap bitmap){
+    public HashMap<String,Float> classify(Bitmap bitmap){
+
         convertBitmapToByteBuffer(bitmap);
-        long startTime = SystemClock.uptimeMillis();
         tflite.run(imgData, labelProbArray);
-        long endTime = SystemClock.uptimeMillis();
         applyFilter();
-        String textToShow = printTopKLabels();
-        textToShow = Long.toString(endTime - startTime) + "ms" + textToShow;
-        return textToShow;
+        HashMap<String,Float> lables = printTopKLabels();
+        return lables;
     }
 
 
@@ -120,21 +118,22 @@ public class Classifier {
             }
         }
     }
-    private String printTopKLabels() {
+    private HashMap<String, Float> printTopKLabels() {
+        HashMap<String, Float> flowers = new HashMap<>();
         for (int i = 0; i < labelList.size(); ++i) {
             sortedLabels.add(
                     new AbstractMap.SimpleEntry<>(labelList.get(i), labelProbArray[0][i]));
             if (sortedLabels.size() > RESULTS_TO_SHOW) {
                 sortedLabels.poll();
             }
-        };
-        String textToShow = "";
+        }
+
         final int size = sortedLabels.size();
         for (int i = 0; i < size; ++i) {
             Map.Entry<String, Float> label = sortedLabels.poll();
-            textToShow = String.format("\n%s: %4.2f",label.getKey(),label.getValue()) + textToShow;
+            flowers.put(label.getKey().toString(), label.getValue());
         }
-        return textToShow;
+        return flowers;
     }
 
     private void convertBitmapToByteBuffer(Bitmap bitmap) {

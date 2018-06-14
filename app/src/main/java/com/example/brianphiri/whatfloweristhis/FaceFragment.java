@@ -17,6 +17,10 @@ import android.widget.TextView;
 import com.example.brianphiri.whatfloweristhis.utils.Classifier;
 
 import java.io.IOException;
+import java.lang.reflect.Array;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.PriorityQueue;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -26,7 +30,6 @@ import static android.support.constraint.Constraints.TAG;
 public class FaceFragment extends Fragment {
 
     private Classifier classifier;
-
     @BindView(R.id.ib_faceFragment)
     ImageButton camera;
     @BindView(R.id.iv_faceFragment)
@@ -73,8 +76,9 @@ public class FaceFragment extends Fragment {
             Log.e(TAG, "Uninitialized Classifier or invalid context.");
             return;
         }
-        String pred = classifier.classify(bitmap);
-        description.setText(pred);
+        HashMap<String,Float> pred = classifier.classify(bitmap);
+
+        title.setText(pred.keySet().toArray()[0].toString());
     }
 
     private void openCamera(){
